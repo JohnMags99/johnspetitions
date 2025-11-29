@@ -62,12 +62,16 @@ pipeline {
 			}
 		}
 	}
+	post {
+		always {
+			cleanWs()   // cleans up workspace after pipeline run
+		}
+	}
 	triggers {
 		githubPush() // webhook triggers pipeline on every push
 	}
 	options {
 		timestamps()
-		cleanWs()
 	}
 }
 
