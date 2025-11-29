@@ -14,6 +14,11 @@ pipeline {
 				checkout scm
 			}
 		}
+		stage('Pre-clean') {
+			steps {
+				sh 'rm -rf target || true'
+			}
+		}
 		stage('Build') {
 			steps {
 				sh 'mvn -B -ntp clean compile'
