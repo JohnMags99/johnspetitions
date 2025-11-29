@@ -8,6 +8,9 @@ pipeline {
 		TOMCAT_WEBAPPS = '/opt/tomcat/latest/webapps'
 		SSH_KEY_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
+	triggers {
+		githubPush() // webhook triggers pipeline on every push
+	}
 	stages {
 		stage('Checkout') {
 			steps {
@@ -69,9 +72,6 @@ pipeline {
 		always {
 			cleanWs()   // cleans up workspace after pipeline run
 		}
-	}
-	triggers {
-		githubPush() // webhook triggers pipeline on every push
 	}
 	options {
 		timestamps()
