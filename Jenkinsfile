@@ -62,7 +62,6 @@ pipeline {
 	}
 	options {
 		timestamps()
-		ansiColor('xterm')
 	}
 }
 
