@@ -53,11 +53,11 @@ pipeline {
 					keyFileVariable: 'SSH_KEY',
 					usernameVariable: 'SSH_USER')]) {
 					sh """
-                		#Upload WAR to home directory
+                		# Upload WAR to home directory
                 		scp -o StrictHostKeyChecking=no -i $SSH_KEY target/$WAR_NAME \
                     	$SSH_USER@$EC2_HOST:/home/$SSH_USER/
 
-                		#SSH into EC2, rebuild Docker image and restart container
+                		# SSH into EC2, rebuild Docker image and restart container
                 		ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$EC2_HOST \
                 		"cd /home/$SSH_USER && \
 						docker rm -f $APP_NAME || true && \
