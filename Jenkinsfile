@@ -51,18 +51,18 @@ pipeline {
 		}
 		stage('Deploy') {
 			steps {
-				withCredentials([sshUserPrivateKey(credentialsId: env.SSH_KEY_CREDENTIALS_ID,
+				withCredentials([sshUserPrivateKey(credentialsId: 'johns_yoga',
 					keyFileVariable: 'SSH_KEY',
 					usernameVariable: 'SSH_USER')]) {
 					sh """
-    					scp -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/johns_yoga.pem target/johnspetitions.war \
-        				admin@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com:/opt/tomcat/webapps/johnspetitions.war
-    					ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/johns_yoga.pem admin@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com \
-        				sudo -u tomcat mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat
+                		# Upload WAR to home directory
+                		scp -o StrictHostKeyChecking=no -i $SSH_KEY target/johnspetitions.war \
+                    	$SSH_USER@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com:/home/$SSH_USER/
 
-					"""
-
-
+                		# Move WAR into Tomcat webapps and restart Tomcat
+                		ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com \
+                    	'sudo mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat'
+            		"""
 				}
 			}
 		}
