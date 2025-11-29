@@ -58,7 +58,7 @@ pipeline {
     					scp -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/johns_yoga.pem target/johnspetitions.war \
         				admin@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com:/opt/tomcat/webapps/johnspetitions.war
     					ssh -o StrictHostKeyChecking=no -i /home/jenkins/.ssh/johns_yoga.pem admin@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com \
-        				sudo mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat
+        				sudo -u tomcat mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat
 
 					"""
 
