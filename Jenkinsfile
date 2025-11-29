@@ -5,7 +5,7 @@ pipeline {
 		WAR_NAME = 'johnspetitions.war'
 		EC2_HOST = 'ec2-13-62-168-70.eu-north-1.compute.amazonaws.com'
 		EC2_USER = 'admin'
-		TOMCAT_WEBAPPS = '/opt/tomcat/webapps'
+		TOMCAT_WEBAPPS = '/opt/tomcat/latest/webapps'
 		SSH_KEY_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
 	stages {
@@ -61,7 +61,7 @@ pipeline {
 
                 		# Move WAR into Tomcat webapps and restart Tomcat
                 		ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@ec2-13-62-168-70.eu-north-1.compute.amazonaws.com \
-                    	'sudo mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/webapps/ && sudo systemctl restart tomcat'
+                    	'sudo mv /home/$SSH_USER/johnspetitions.war /opt/tomcat/latest/webapps && sudo systemctl restart tomcat'
             		"""
 				}
 			}
