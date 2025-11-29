@@ -57,7 +57,7 @@ pipeline {
                 		scp -o StrictHostKeyChecking=no -i $SSH_KEY target/$WAR_NAME \
                     	$SSH_USER@$EC2_HOST:/home/$SSH_USER/
 
-                		# SSH into EC2, rebuild Docker image and restart containerr
+                		# SSH into EC2, rebuild Docker image and restart container
                 		ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$EC2_HOST \
                 		"cd /home/$SSH_USER && \
 						docker rm -f $APP_NAME || true && \
