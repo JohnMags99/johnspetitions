@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>John's Petitions</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <script th:src="@{/js/bootstrap.bundle.js}"></script>
+
+</head>
+<body>
+<h1>Welcome to John's Petitions</h1>
+<p>This is the home page served by Spring Boot and Thymeleaf.</p>
+
+<!-- Example of dynamic content -->
+<p th:text="'Current time: ' + ${#dates.format(#dates.createNow(), 'HH:mm:ss')}"></p>
+
+<!-- Example link to another controller -->
+<a th:href="@{/create}">Create a new petition</a>
+</body>
+</html>
