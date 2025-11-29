@@ -3,10 +3,10 @@ pipeline {
 	environment {
 		APP_NAME = 'johnspetitions'
 		WAR_NAME = 'johnspetitions.war'
-		EC2_HOST = 'ec2-13-62-168-70.eu-north-1.compute.amazonaws.com'       // replace with your EC2 public IP or hostname
-		EC2_USER = 'admin'              // or 'ubuntu' depending on your AMI
+		EC2_HOST = 'ec2-13-62-168-70.eu-north-1.compute.amazonaws.com'
+		EC2_USER = 'admin'
 		TOMCAT_WEBAPPS = '/opt/tomcat/webapps'
-		SSH_KEY_CREDENTIALS_ID = 'ec2-ssh-key' // ID of the SSH key you added in Jenkins
+		SSH_KEY_CREDENTIALS_ID = 'ec2-ssh-key'
 	}
 	stages {
 		stage('Checkout') {
@@ -51,7 +51,7 @@ pipeline {
 		}
 		stage('Deploy') {
 			steps {
-				withCredentials([sshUserPrivateKey(credentialsId: SSH_KEY_CREDENTIALS_ID,
+				withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key',
 					keyFileVariable: 'SSH_KEY',
 					usernameVariable: 'SSH_USER')]) {
 					sh """
