@@ -54,9 +54,12 @@ pipeline {
                 		scp -o StrictHostKeyChecking=no -i $SSH_KEY target/$WAR_NAME \
                     	$SSH_USER@$EC2_HOST:/home/$SSH_USER/
 
-                		# Move WAR into Tomcat webapps and restart Tomcat
+                		# SSH into EC2, rebuild Docker image and restart container
                 		ssh -o StrictHostKeyChecking=no -i $SSH_KEY $SSH_USER@$EC2_HOST \
-                    	'sudo mv /home/$SSH_USER/$WAR_NAME $TOMCAT_WEBAPPS && sudo systemctl restart tomcat'
+                    		cd /home/$SSH_USER && \
+                    		docker rm -f $APP_NAME || true && \
+							docker build -t $APP_NAME-tomcat . && \
+							docker run -d --name $APP_NAME -p 9090:8080 $APP_NAME-tomcat"
             		"""
 				}
 			}
