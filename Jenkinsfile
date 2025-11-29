@@ -49,18 +49,18 @@ pipeline {
 				withCredentials([sshUserPrivateKey(credentialsId: SSH_KEY_CREDENTIALS_ID,
 					keyFileVariable: 'SSH_KEY',
 					usernameVariable: 'SSH_USER')]) {
-					sh '''
+					sh """
                 		# Upload WAR to home directory
-                		scp -o StrictHostKeyChecking=no -i ${SSH_KEY} target/${WAR_NAME} \
-                    	${SSH_USER}@${EC2_HOST}:/home/${SSH_USER}/
+                		scp -o StrictHostKeyChecking=no -i SSH_KEY target/$WAR_NAME \
+                    	SSH_USER@$EC2_HOST:/home/SSH_USER/
 
                 		# SSH into EC2, rebuild Docker image and restart container
-                		ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SSH_USER}@${EC2_HOST} \
-                    		cd /home/${SSH_USER} && \
-                    		docker rm -f ${APP_NAME} || true && \
-							docker build -t ${APP_NAME}-tomcat . && \
-							docker run -d --name ${APP_NAME} -p 9090:8080 ${APP_NAME}-tomcat"
-            		'''
+                		ssh -o StrictHostKeyChecking=no -i SSH_KEY SSH_USER@$EC2_HOST \
+                    		cd /home/SSH_USER && \
+                    		docker rm -f $APP_NAME || true && \
+							docker build -t $APP_NAME-tomcat . && \
+							docker run -d --name $APP_NAME -p 9090:8080 $APP_NAME-tomcat"
+            		"""
 				}
 			}
 		}
