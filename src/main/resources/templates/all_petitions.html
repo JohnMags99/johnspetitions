@@ -11,6 +11,26 @@
 <body>
 <h1>All Petitions</h1>
 <p>See below all current petitions</p>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Created By</th>
+        <th>Created At</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="petition : ${petitions}">
+        <td th:text="${petition.petitionId}"></td>
+        <td th:text="${petition.title}"></td>
+        <td th:text="${petition.description}"></td>
+        <td th:text="${petition.createdBy}"></td>
+        <td th:text="${petition.createdAt}"></td>
+    </tr>
+    </tbody>
+</table>
 
 <p><a th:href="@{/}">Home</a></p>
 </body>
