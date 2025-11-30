@@ -19,6 +19,39 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("signForm");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        alert("Signature submitted successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error submitting signature.");
+                    }
+
+                    // Close the petition modal after alert
+                    const signModalEl = document.querySelector(".modal.show");
+                    if (signModalEl) {
+                        const signModal = bootstrap.Modal.getInstance(signModalEl);
+                        signModal.hide();
+                    }
+
+                } catch (err) {
+                    alert("Network error.");
+                }
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -36,6 +69,7 @@
                 <th>Description</th>
                 <th>Created By</th>
                 <th>Created At</th>
+                <th>Recent Signatures</th>
                 <th></th>
             </tr>
             </thead>
@@ -45,7 +79,16 @@
                 <td th:text="${petition.title}"></td>
                 <td th:text="${petition.description}"></td>
                 <td th:text="${petition.createdBy}"></td>
-                <td th:text="${petition.createdAt}"></td>
+                <td th:text="${#temporals.format(petition.createdAt, 'dd MMMM yyyy')}"></td>
+                <td>
+                    <ul>
+                        <li th:each="sig : ${recentSignaturesByPetition[petition.petitionId]}"
+                            th:text="${sig.signerName + ' (' + sig.signDate + ')'}"></li>
+                        <li th:if="${recentSignaturesByPetition[petition.petitionId] == null or recentSignaturesByPetition[petition.petitionId].isEmpty()}">
+                            <span class="text-muted">No signatures yet</span>
+                        </li>
+                    </ul>
+                </td>
                 <td>
                     <button type="button" class="btn btn-primary"
                             data-bs-toggle="modal"
@@ -63,8 +106,8 @@
          aria-labelledby="signModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <form th:action="@{/sign}" method="post">
-                    <div class="modal-header">
+                <form id="signForm" th:action="@{/sign}" method="post">
+                    <div class="modal-body">
                         <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>

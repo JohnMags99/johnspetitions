@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "signatures")
 public class Signature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +56,9 @@ public class Signature {
 
     public void setSignDate(LocalDateTime signDate) {
         this.signDate = signDate;
+    }
+
+    public void setPetition(Petition petition) {
+        this.petition = petition;
     }
 }
