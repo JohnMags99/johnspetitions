@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>John's Petitions</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+  <script th:src="@{/js/bootstrap.bundle.js}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("signForm");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        try {
+          const response = await fetch(form.action, {
+            method: "POST",
+            body: formData
+          });
+
+          if (response.ok) {
+            alert("Signature submitted successfully!");
+            location.reload();
+          } else {
+            alert("Error submitting signature.");
+          }
+
+          // Close the petition modal after alert
+          const signModalEl = document.querySelector(".modal.show");
+          if (signModalEl) {
+            const signModal = bootstrap.Modal.getInstance(signModalEl);
+            signModal.hide();
+          }
+
+        } catch (err) {
+          alert("Network error.");
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+<h1 th:text="${petition.title}">Petition Title</h1>
+<p th:text="${petition.description}">Petition description goes here.</p>
+<h2>Signatures</h2>
+<ul>
+  <li th:each="sig : ${signatures}">
+    <span th:text="${sig.signerName}"></span>
+    (<span th:text="${#temporals.format(sig.signDate, 'dd MMM yyyy HH:mm')}"></span>)
+  </li>
+</ul>
+<h3>Add your signature</h3>
+<button type="button" class="btn btn-primary"
+        data-bs-toggle="modal"
+        th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
+  Sign Petition
+</button>
+<div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
+     aria-labelledby="signModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <form id="signForm" th:action="@{/sign}" method="post">
+        <div class="modal-body">
+          <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
+          <div class="mb-3">
+            <label for="signerName" class="form-label">Your Name</label>
+            <input type="text" class="form-control" id="signerName" name="signerName" required>
+          </div>
+          <div class="mb-3">
+            <label for="signerEmail" class="form-label">Your Email</label>
+            <input type="email" class="form-control" id="signerEmail" name="signerEmail" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Submit Signature</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<p><a th:href="@{/search}">Back to Search</a></p>
+<p><a th:href="@{/}">Home</a></p>
+</body>
+</html>

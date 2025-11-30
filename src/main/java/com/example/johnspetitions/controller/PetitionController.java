@@ -7,6 +7,7 @@ import com.example.johnspetitions.entity.Signature;
 import com.example.johnspetitions.repository.PetitionRepository;
 import com.example.johnspetitions.repository.SignatureRepository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -44,5 +45,17 @@ public class PetitionController {
         model.addAttribute("signaturesByPetition", signaturesByPetition);
         model.addAttribute("query", query);
         return "search_petitions";
+    }
+
+    @GetMapping("/petitions/{id}")
+    public String viewPetition(@PathVariable("id") Integer id, org.springframework.ui.Model model) {
+        Petition petition = petitionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid petition Id:" + id));
+
+        List<Signature> signatures = signatureRepository.findByPetition_PetitionId(id);
+
+        model.addAttribute("petition", petition);
+        model.addAttribute("signatures", signatures);
+        return "view_petition"; // template name
     }
 }
