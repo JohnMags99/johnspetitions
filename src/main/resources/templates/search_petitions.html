@@ -6,11 +6,35 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
     <script th:src="@{/js/bootstrap.bundle.js}"></script>
-
 </head>
 <body>
 <h1>Search Petitions</h1>
-<p>Search for a petitions.</p>
+<p>Search for a petition.</p>
+
+<form class="form-inline my-2 my-lg-0" th:action="@{/search}" method="get">
+    <input class="form-control mr-sm-2" type="search" name="q"
+           th:value="${query}" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<div th:if="${results != null}">
+    <h2 th:if="${results.isEmpty()}">No results found</h2>
+
+    <ul th:if="${!results.isEmpty()}">
+        <li th:each="petition : ${results}">
+            <a th:href="@{'/petitions/' + ${petition.petitionId}}"
+               th:text="${petition.title}"></a>
+            <p th:text="${petition.description}"></p>
+            <ul>
+                <li th:each="sig : ${signaturesByPetition[petition.petitionId]}"
+                    th:text="${sig.signerName}"></li>
+                <li th:if="${signaturesByPetition[petition.petitionId] == null or signaturesByPetition[petition.petitionId].isEmpty()}">
+                    <span class="text-muted">No signatures yet</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
 <p><a th:href="@{/}">Home</a></p>
 </body>

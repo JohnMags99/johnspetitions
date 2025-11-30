@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 public class Petition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long petitionId;
+    private Integer petitionId;
 
     private String title;
     private String description;
     private String createdBy;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Long getPetitionId() {
+    public Integer getPetitionId() {
         return petitionId;
     }
 
-    public void setPetitionId(Long petitionId) {
+    public void setPetitionId(Integer petitionId) {
         this.petitionId = petitionId;
     }
 

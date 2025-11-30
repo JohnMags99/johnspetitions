@@ -26,7 +26,7 @@ public class SignatureController {
 
     @PostMapping("/sign")
     @ResponseBody
-    public ResponseEntity<String> signPetition(@RequestParam Long petitionId,
+    public ResponseEntity<String> signPetition(@RequestParam Integer petitionId,
                                                @RequestParam String signerName,
                                                @RequestParam String signerEmail) {
         try {

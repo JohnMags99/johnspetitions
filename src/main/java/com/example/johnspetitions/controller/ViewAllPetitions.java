@@ -27,7 +27,7 @@ public class ViewAllPetitions {
     public String listAllPetitions(Model model) {
         List<Petition> petitions = petitionRepository.findAll();
 
-        Map<Long, List<Signature>> recentSignaturesByPetition = new HashMap<>();
+        Map<Integer, List<Signature>> recentSignaturesByPetition = new HashMap<>();
         for (Petition petition : petitions) {
             List<Signature> recent = signatureRepository
                     .findTop5ByPetition_PetitionIdOrderBySignDateDesc(petition.getPetitionId());

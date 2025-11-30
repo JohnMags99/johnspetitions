@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class Signature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long signatureId;
+    private Integer signatureId;
 
     @ManyToOne
     @JoinColumn(name = "petition_id", nullable = false)
@@ -18,11 +18,11 @@ public class Signature {
     private String signerEmail;
     private LocalDateTime signDate = LocalDateTime.now();
 
-    public Long getSignatureId() {
+    public Integer getSignatureId() {
         return signatureId;
     }
 
-    public void setSignatureId(Long signatureId) {
+    public void setSignatureId(Integer signatureId) {
         this.signatureId = signatureId;
     }
 
