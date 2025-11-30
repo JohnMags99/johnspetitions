@@ -47,6 +47,15 @@ pipeline {
 				}
 			}
 		}
+		stage('Approval') {
+			steps {
+				script {
+					input message: 'project admin must approve before deploy,',
+					ok: 'Approve',
+					submitter: 'johnrmag'
+				}
+			}
+		}
 		stage('Deploy') {
 			steps {
 				withCredentials([sshUserPrivateKey(credentialsId: SSH_KEY_CREDENTIALS_ID,
