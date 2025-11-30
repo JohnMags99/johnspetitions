@@ -3,34 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <title>John's Petitions</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
     <script th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Attach listener to each modal dynamically
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('shown.bs.modal', () => {
+                    const input = modal.querySelector('input[type="text"], input[type="email"]');
+                    if (input) {
+                        input.focus();
+                    }
+                });
+            });
+        });
+    </script>
 
 </head>
 <body>
-<h1>All Petitions</h1>
-<p>See below all current petitions</p>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Created By</th>
-        <th>Created At</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="petition : ${petitions}">
-        <td th:text="${petition.petitionId}"></td>
-        <td th:text="${petition.title}"></td>
-        <td th:text="${petition.description}"></td>
-        <td th:text="${petition.createdBy}"></td>
-        <td th:text="${petition.createdAt}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="card mx-auto mt-5">
+    <div class="card-title">
+        <h1>All Petitions</h1>
+        <p>See below all current petitions</p>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Created By</th>
+                <th>Created At</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="petition : ${petitions}">
+                <td th:text="${petition.petitionId}"></td>
+                <td th:text="${petition.title}"></td>
+                <td th:text="${petition.description}"></td>
+                <td th:text="${petition.createdBy}"></td>
+                <td th:text="${petition.createdAt}"></td>
+                <td>
+                    <button type="button" class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
+                        Sign Petition
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:each="petition : ${petitions}">
+    <div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
+         aria-labelledby="signModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form th:action="@{/sign}" method="post">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
+                        <div class="mb-3">
+                            <label for="signerName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="signerName" name="signerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signerEmail" class="form-label">Your Email</label>
+                            <input type="email" class="form-control" id="signerEmail" name="signerEmail" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit Signature</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <p><a th:href="@{/}">Home</a></p>
 </body>
