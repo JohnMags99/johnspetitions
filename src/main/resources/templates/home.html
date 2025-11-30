@@ -12,10 +12,10 @@
 <h1>Welcome to John's Petitions</h1>
 <p>This is the home page served by Spring Boot and Thymeleaf.</p>
 
-<!-- Example of dynamic content -->
 <p th:text="'Current time: ' + ${#dates.format(#dates.createNow(), 'HH:mm:ss')}"></p>
 
-<!-- Example link to another controller -->
-<a th:href="@{/create}">Create a new petition</a>
+<p><a th:href="@{/createPetition}">Create a new petition</a></p>
+<p><a th:href="@{/searchPetition}">Search for a petition</a></p>
+<p><a th:href="@{/allPetitions}">All petitions</a></p>
 </body>
 </html>
