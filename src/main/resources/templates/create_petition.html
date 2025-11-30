@@ -10,6 +10,9 @@
 </head>
 <body class="container mt-5">
 <h2>Create a New Petition</h2>
+<div th:if="${param.error}">
+    <p class="alert alert-danger" th:text="'Error: ' + ${param.error}"></p>
+</div>
 <form th:action="@{/create}" th:object="${petition}" method="post">
     <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -25,7 +28,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit Petition</button>
 </form>
-
 <p><a th:href="@{/}">Home</a></p>
 </body>
 </html>
