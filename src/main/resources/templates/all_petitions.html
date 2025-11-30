@@ -54,84 +54,108 @@
 
 </head>
 <body>
-<div class="card mx-auto mt-5">
-    <div class="card-title">
-        <h1>All Petitions</h1>
-        <p>See below all current petitions</p>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <svg width="32px" height="32px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M14.1754 13.0877C14.4514 12.7518 14.7037 12.3889 14.9282 12C17.1373 8.17365 15.8263 3.28093 12 1.07179C8.17365 -1.13735 3.28093 0.173652 1.07179 3.99999C-0.643932 6.97171 -0.236372 10.5867 1.82376 13.0881L1.24293e-05 14V16H7.84579C7.94371 16.0018 8.04156 16.0018 8.1393 16H16V14L14.1754 13.0877ZM8.99995 14C8.99995 13.4478 8.55229 13.0003 8.00015 13.0004L7.50093 13.0005C6.82015 13.001 6.12934 12.8275 5.4999 12.4641C3.58673 11.3595 2.93123 8.91315 4.0358 6.99998L5.76785 7.99998C5.21557 8.95657 5.54332 10.1797 6.4999 10.732C6.8169 10.915 7.16027 11.0008 7.49901 11.0005L7.99976 11.0004C9.65662 11.0001 10.9999 12.3431 11 14H8.99995ZM8.38397 5.33493C7.96975 6.05237 7.05237 6.29818 6.33493 5.88397C5.61749 5.46975 5.37168 4.55237 5.78589 3.83493C6.2001 3.11749 7.11749 2.87168 7.83493 3.28589C8.55237 3.7001 8.79818 4.61749 8.38397 5.33493ZM10.1651 9.24999C10.8825 9.66421 11.7999 9.41839 12.2141 8.70095C12.6283 7.98352 12.3825 7.06613 11.6651 6.65192C10.9476 6.2377 10.0302 6.48352 9.61602 7.20095C9.2018 7.91839 9.44762 8.83578 10.1651 9.24999Z"
+                          fill="#FFFFFF"/>
+                </svg>
+                <strong class="mx-4">John's Petitions</strong>
+            </a>
+        </div>
+        <div class="d-flex justify-content-center gap-3 mx-4">
+            <a th:href="@{/}" class="btn btn-success">Home</a>
+            <a th:href="@{/createPetition}" class="btn btn-success">Create a petition</a>
+            <a th:href="@{/searchPetition}" class="btn btn-success">Search for a petition</a>
+        </div>
     </div>
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Created By</th>
-                <th>Created At</th>
-                <th>Recent Signatures</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="petition : ${petitions}">
-                <td th:text="${petition.petitionId}"></td>
-                <td><a th:href="@{'/petitions/' + ${petition.petitionId}}"
-                       th:text="${petition.title}"></a></td>
-                <td th:text="${petition.description}"></td>
-                <td th:text="${petition.createdBy}"></td>
-                <td th:text="${#temporals.format(petition.createdAt, 'dd MMMM yyyy')}"></td>
-                <td>
-                    <ul>
-                        <li th:each="sig : ${recentSignaturesByPetition[petition.petitionId]}"
-                            th:text="${sig.signerName + ' (' + sig.signDate + ')'}"></li>
-                        <li th:if="${recentSignaturesByPetition[petition.petitionId] == null or recentSignaturesByPetition[petition.petitionId].isEmpty()}">
-                            <span class="text-muted">No signatures yet</span>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
-                        Sign Petition
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div th:each="petition : ${petitions}">
-    <div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
-         aria-labelledby="signModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <form th:id="'signForm__' + ${petition.petitionId}" th:action="@{/sign}" method="post">
-                    <div class="modal-body">
-                        <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</header>
+<div class="d-flex vh-100 align-items-start">
+    <div class="container card border-black bg-dark text-white" style="margin-top:5vh;">
+        <div class="p-5">
+            <div class="card-title">
+                <h1>All Petitions</h1>
+                <p>See below all current petitions</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Created By</th>
+                        <th>Created At</th>
+                        <th>Recent Signatures</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="petition : ${petitions}">
+                        <td><a th:href="@{'/petitions/' + ${petition.petitionId}}"
+                               th:text="${petition.title}"></a></td>
+                        <td th:text="${petition.description}"></td>
+                        <td th:text="${petition.createdBy}"></td>
+                        <td th:text="${#temporals.format(petition.createdAt, 'dd MMMM yyyy')}"></td>
+                        <td>
+                            <ul>
+                                <li th:each="sig : ${recentSignaturesByPetition[petition.petitionId]}"
+                                    th:text="${sig.signerName + ' (' + sig.signDate + ')'}"></li>
+                                <li th:if="${recentSignaturesByPetition[petition.petitionId] == null or recentSignaturesByPetition[petition.petitionId].isEmpty()}">
+                                    <span class="text-muted">No signatures yet</span>
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-success"
+                                    data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
+                                Sign Petition
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div th:each="petition : ${petitions}">
+            <div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
+                 aria-labelledby="signModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content bg-dark text-white">
+                        <form th:id="'signForm__' + ${petition.petitionId}" th:action="@{/sign}" method="post">
+                            <div class="modal-body">
+                                <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
+                                <div class="mb-3">
+                                    <label for="signerName" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="signerName" name="signerName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="signerEmail" class="form-label">Your Email</label>
+                                    <input type="email" class="form-control" id="signerEmail" name="signerEmail"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Submit Signature</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
-                        <div class="mb-3">
-                            <label for="signerName" class="form-label">Your Name</label>
-                            <input type="text" class="form-control" id="signerName" name="signerName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="signerEmail" class="form-label">Your Email</label>
-                            <input type="email" class="form-control" id="signerEmail" name="signerEmail" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Submit Signature</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<p><a th:href="@{/}">Home</a></p>
+<footer class="navbar navbar-dark bg-dark fixed-bottom">
+    <div class="container d-flex justify-content-between">
+        <p class="text-white">CT5171 - johnspetitions - 24105284</p>
+    </div>
+</footer>
 </body>
 </html>

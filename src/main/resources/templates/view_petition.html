@@ -1,90 +1,130 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>John's Petitions</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" />
-  <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
-  <script th:src="@{/js/bootstrap.bundle.js}"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("signForm");
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    <meta charset="UTF-8">
+    <title>John's Petitions</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <script th:src="@{/js/bootstrap.bundle.js}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("signForm");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
 
-        const formData = new FormData(form);
-        try {
-          const response = await fetch(form.action, {
-            method: "POST",
-            body: formData
-          });
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        body: formData
+                    });
 
-          if (response.ok) {
-            alert("Signature submitted successfully!");
-            location.reload();
-          } else {
-            alert("Error submitting signature.");
-          }
+                    if (response.ok) {
+                        alert("Signature submitted successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error submitting signature.");
+                    }
 
-          // Close the petition modal after alert
-          const signModalEl = document.querySelector(".modal.show");
-          if (signModalEl) {
-            const signModal = bootstrap.Modal.getInstance(signModalEl);
-            signModal.hide();
-          }
+                    // Close the petition modal after alert
+                    const signModalEl = document.querySelector(".modal.show");
+                    if (signModalEl) {
+                        const signModal = bootstrap.Modal.getInstance(signModalEl);
+                        signModal.hide();
+                    }
 
-        } catch (err) {
-          alert("Network error.");
-        }
-      });
-    });
-  </script>
+                } catch (err) {
+                    alert("Network error.");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
-<h1 th:text="${petition.title}">Petition Title</h1>
-<p th:text="${petition.description}">Petition description goes here.</p>
-<h2>Signatures</h2>
-<ul>
-  <li th:each="sig : ${signatures}">
-    <span th:text="${sig.signerName}"></span>
-    (<span th:text="${#temporals.format(sig.signDate, 'dd MMM yyyy HH:mm')}"></span>)
-  </li>
-</ul>
-<h3>Add your signature</h3>
-<button type="button" class="btn btn-primary"
-        data-bs-toggle="modal"
-        th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
-  Sign Petition
-</button>
-<div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
-     aria-labelledby="signModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <form id="signForm" th:action="@{/sign}" method="post">
-        <div class="modal-body">
-          <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <svg width="32px" height="32px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M14.1754 13.0877C14.4514 12.7518 14.7037 12.3889 14.9282 12C17.1373 8.17365 15.8263 3.28093 12 1.07179C8.17365 -1.13735 3.28093 0.173652 1.07179 3.99999C-0.643932 6.97171 -0.236372 10.5867 1.82376 13.0881L1.24293e-05 14V16H7.84579C7.94371 16.0018 8.04156 16.0018 8.1393 16H16V14L14.1754 13.0877ZM8.99995 14C8.99995 13.4478 8.55229 13.0003 8.00015 13.0004L7.50093 13.0005C6.82015 13.001 6.12934 12.8275 5.4999 12.4641C3.58673 11.3595 2.93123 8.91315 4.0358 6.99998L5.76785 7.99998C5.21557 8.95657 5.54332 10.1797 6.4999 10.732C6.8169 10.915 7.16027 11.0008 7.49901 11.0005L7.99976 11.0004C9.65662 11.0001 10.9999 12.3431 11 14H8.99995ZM8.38397 5.33493C7.96975 6.05237 7.05237 6.29818 6.33493 5.88397C5.61749 5.46975 5.37168 4.55237 5.78589 3.83493C6.2001 3.11749 7.11749 2.87168 7.83493 3.28589C8.55237 3.7001 8.79818 4.61749 8.38397 5.33493ZM10.1651 9.24999C10.8825 9.66421 11.7999 9.41839 12.2141 8.70095C12.6283 7.98352 12.3825 7.06613 11.6651 6.65192C10.9476 6.2377 10.0302 6.48352 9.61602 7.20095C9.2018 7.91839 9.44762 8.83578 10.1651 9.24999Z"
+                          fill="#FFFFFF"/>
+                </svg>
+                <strong class="mx-4">John's Petitions</strong>
+            </a>
         </div>
-        <div class="modal-body">
-          <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
-          <div class="mb-3">
-            <label for="signerName" class="form-label">Your Name</label>
-            <input type="text" class="form-control" id="signerName" name="signerName" required>
-          </div>
-          <div class="mb-3">
-            <label for="signerEmail" class="form-label">Your Email</label>
-            <input type="email" class="form-control" id="signerEmail" name="signerEmail" required>
-          </div>
+        <div class="d-flex justify-content-center gap-3 mx-4">
+            <a th:href="@{/}" class="btn btn-success">Home</a>
+            <a th:href="@{/createPetition}" class="btn btn-success">Create a petition</a>
+            <a th:href="@{/searchPetition}" class="btn btn-success">Search for a petition</a>
+            <a th:href="@{/allPetitions}" class="btn btn-success">All petitions</a>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Submit Signature</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </form>
     </div>
-  </div>
+</header>
+<div class="d-flex vh-100 align-items-start">
+    <div class="container card border-black bg-dark text-white" style="margin-top:5vh;">
+        <div class="p-5">
+            <h1 class="card-title mb-4" th:text="${petition.title}">Petition Title</h1>
+            <p class="rounded p-2 bg-white text-black" th:text="${petition.description}">Petition description goes
+                here.</p>
+            <h2 class="card-subtitle mb-2">Signatures</h2>
+            <div class="rounded p-2 bg-white text-black mb-4" th:if="${!signatures.isEmpty()}">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Signed</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sig : ${signatures}">
+                        <td th:text="${sig.signerName}"></td>
+                        <td th:text="${#temporals.format(sig.signDate, 'dd MMMM yyyy : HH:mm')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 class="card-subtitle mb-2">Add your signature</h3>
+            <button type="button" class="btn btn-success"
+                    data-bs-toggle="modal"
+                    th:attr="data-bs-target='#signModal__' + ${petition.petitionId}">
+                Sign Petition
+            </button>
+            <div class="modal fade" th:id="'signModal__' + ${petition.petitionId}" tabindex="-1"
+                 aria-labelledby="signModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content bg-dark text-white">
+                        <form id="signForm" th:action="@{/sign}" method="post">
+                            <div class="modal-body">
+                                <h1 class="modal-title fs-5" th:text="'Sign Petition: ' + ${petition.title}"></h1>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="petitionId" th:value="${petition.petitionId}"/>
+                                <div class="mb-3">
+                                    <label for="signerName" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="signerName" name="signerName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="signerEmail" class="form-label">Your Email</label>
+                                    <input type="email" class="form-control" id="signerEmail" name="signerEmail"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Submit Signature</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p><a th:href="@{/search}">Back to Search</a></p>
-<p><a th:href="@{/}">Home</a></p>
+<footer class="navbar navbar-dark bg-dark fixed-bottom">
+    <div class="container d-flex justify-content-between">
+        <p class="text-white">CT5171 - johnspetitions - 24105284</p>
+    </div>
+</footer>
 </body>
 </html>

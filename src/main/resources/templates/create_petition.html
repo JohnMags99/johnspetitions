@@ -3,31 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>John's Petitions</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
     <script th:src="@{/js/bootstrap.bundle.js}"></script>
 
 </head>
-<body class="container mt-5">
-<h2>Create a New Petition</h2>
-<div th:if="${param.error}">
-    <p class="alert alert-danger" th:text="'Error: ' + ${param.error}"></p>
+<body>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <svg width="32px" height="32px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M14.1754 13.0877C14.4514 12.7518 14.7037 12.3889 14.9282 12C17.1373 8.17365 15.8263 3.28093 12 1.07179C8.17365 -1.13735 3.28093 0.173652 1.07179 3.99999C-0.643932 6.97171 -0.236372 10.5867 1.82376 13.0881L1.24293e-05 14V16H7.84579C7.94371 16.0018 8.04156 16.0018 8.1393 16H16V14L14.1754 13.0877ZM8.99995 14C8.99995 13.4478 8.55229 13.0003 8.00015 13.0004L7.50093 13.0005C6.82015 13.001 6.12934 12.8275 5.4999 12.4641C3.58673 11.3595 2.93123 8.91315 4.0358 6.99998L5.76785 7.99998C5.21557 8.95657 5.54332 10.1797 6.4999 10.732C6.8169 10.915 7.16027 11.0008 7.49901 11.0005L7.99976 11.0004C9.65662 11.0001 10.9999 12.3431 11 14H8.99995ZM8.38397 5.33493C7.96975 6.05237 7.05237 6.29818 6.33493 5.88397C5.61749 5.46975 5.37168 4.55237 5.78589 3.83493C6.2001 3.11749 7.11749 2.87168 7.83493 3.28589C8.55237 3.7001 8.79818 4.61749 8.38397 5.33493ZM10.1651 9.24999C10.8825 9.66421 11.7999 9.41839 12.2141 8.70095C12.6283 7.98352 12.3825 7.06613 11.6651 6.65192C10.9476 6.2377 10.0302 6.48352 9.61602 7.20095C9.2018 7.91839 9.44762 8.83578 10.1651 9.24999Z"
+                          fill="#FFFFFF"/>
+                </svg>
+                <strong class="mx-4">John's Petitions</strong>
+            </a>
+        </div>
+        <div class="d-flex justify-content-center gap-3 mx-4">
+            <a th:href="@{/}" class="btn btn-success">Home</a>
+            <a th:href="@{/searchPetition}" class="btn btn-success">Search for a petition</a>
+            <a th:href="@{/allPetitions}" class="btn btn-success">All petitions</a>
+        </div>
+    </div>
+</header>
+<div class="d-flex vh-100 align-items-start">
+    <div class="container card border-black bg-dark text-white" style="margin-top:20vh;">
+        <div class="p-5">
+            <h2 class="card-title">Create a New Petition</h2>
+            <div th:if="${param.error}">
+                <p class="alert alert-danger" th:text="'Error: ' + ${param.error}"></p>
+            </div>
+            <form th:action="@{/create}" th:object="${petition}" method="post">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" th:field="*{title}" class="form-control" id="title" required/>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea th:field="*{description}" class="form-control" id="description" rows="4"
+                              required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="createdBy" class="form-label">Created By</label>
+                    <input type="text" th:field="*{createdBy}" class="form-control" id="createdBy" required/>
+                </div>
+                <button type="submit" class="btn btn-success">Submit Petition</button>
+            </form>
+        </div>
+    </div>
 </div>
-<form th:action="@{/create}" th:object="${petition}" method="post">
-    <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" th:field="*{title}" class="form-control" id="title" required />
+<footer class="navbar navbar-dark bg-dark fixed-bottom">
+    <div class="container d-flex justify-content-between">
+        <p class="text-white">CT5171 - johnspetitions - 24105284</p>
     </div>
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea th:field="*{description}" class="form-control" id="description" rows="4" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label for="createdBy" class="form-label">Created By</label>
-        <input type="text" th:field="*{createdBy}" class="form-control" id="createdBy" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Submit Petition</button>
-</form>
-<p><a th:href="@{/}">Home</a></p>
+</footer>
 </body>
 </html>
